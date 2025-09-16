@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Products - Holuwafemi Fashion Store</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    .product {
+      background: #fff;
+      padding: 15px;
+      margin: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      max-width: 300px;
+    }
+    .product h3 {
+      margin: 0 0 10px;
+    }
+    .product p {
+      font-weight: bold;
+      margin: 5px 0;
+    }
+    button {
+      background: #28a745;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+  <h2>Available Products</h2>
+
+  <div class="product">
+    <h3>Blue T-Shirt</h3>
+    <p>₦5,000</p>
+    <button onclick="addToCart('Blue T-Shirt')">Add to Cart</button>
+  </div>
+
+  <div class="product">
+    <h3>Black Jeans</h3>
+    <p>₦8,000</p>
+    <button onclick="addToCart('Black Jeans')">Add to Cart</button>
+  </div>
+
+  <div class="product">
+    <h3>White Sneakers</h3>
+    <p>₦12,000</p>
+    <button onclick="addToCart('White Sneakers')">Add to Cart</button>
+  </div>
+
+  <p><a href="checkout.html">Go to Cart</a></p>
+
+  <script>
+    // Add item to cart
+    function addToCart(item) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart.push(item);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert(item + " added to cart!");
+    }
+  </script>
+</body>
+</html>

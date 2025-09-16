@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Holuwafemi store</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+    }
+    header {
+      background-color: gold;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+    }
+    header .title {
+      display: flex;
+      align-items: center;
+    }
+    header img {
+      height: 40px;
+    }
+    header h1 {
+      margin-left: 10px;
+      color: black;
+    }
+    nav a {
+      color: black;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav span {
+      cursor: pointer;
+    }
+    .search-bar {
+      text-align: center;
+      margin: 20px;
+    }
+    .search-bar input {
+      padding: 10px;
+      width: 80%;
+      max-width: 500px;
+      font-size: 16px;
+    }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      padding: 20px;
+    }
+    .product {
+      background: white;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .product img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      cursor: pointer;
+    }
+    .product button {
+      background-color: gold;
+      border: none;
+      color: black;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-top: 5px;
+    }
+    footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 30px;
+    }
+
+    #cart-box {
+      display: none;
+      position: fixed;
+      right: 10px;
+      top: 60px;
+      background: white;
+      border: 1px solid #ccc;
+      width: 300px;
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      z-index: 999;
+    }
+    #cart-box h3 {
+      margin-top: 0;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .cart-item span {
+      display: inline-block;
+    }
+    .cart-item button {
+      background: red;
+      color: white;
+      border: none;
+      padding: 2px 6px;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+
+    /* Modal styling */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      padding-top: 50px;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+    }
+    .modal img {
+      display: block;
+      margin: auto;
+      max-width: 90%;
+      max-height: 80%;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="title">
+    <img src="Holu.jpg" alt="Logo">
+    <h1>HOLUWAFEMI FASHION STORE</h1>
+  </div>
+  <nav>
+    <a href="#">Home</a>
+	 <a href="products.html">Shop</a>
+    <a href="login.html">Login</a>
+    <a href="register.html">Register</a>
+    <span onclick="toggleCart()">🛒 Cart (<span id="cart-count">0</span>)</span>
+  </nav>
+</header>
+
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="Search product..." onkeyup="searchProduct()">
+</div>
+
+<div class="products" id="product-list"></div>
+
+<div id="cart-box">
+  <h3>Your Cart</h3>
+  <a href="checkout.html"><button>Checkout</button></a>
+  <div id="cart-items"></div>
+</div>
+
+<!-- Modal for enlarged image -->
+<div class="modal" id="imgmodal" onclick="closeModal()"></div>
+
+<footer>
+  <p>&copy; 2025 Holuwafemi fashion Store. All rights reserved.</p>
+</footer>
+
+<script>
+  const products = [
+    { name: "Boxer Shorts", image: "boxer.jpg", price: "₦2000" },
+    { name: "Bluejeans for Men", image: "jeans.jpeg", price: "₦8000" },
+    { name: "Sneakers", image: "Sneakers.jpeg", price: "₦5000" },
+    { name: "3in1 Singlet", image: "Singlet.jpeg", price: "₦3000" },
+    { name: "Men Suit", image: "Men suit.jpeg", price: "₦30000" },
+    { name: "Men Polo", image: "polo.jpg", price: "₦10000" },
+    { name: "Roundneck", image: "roundneck.jpg", price: "₦7000" },
+    { name: "Up and Down", image: "poloo.jpg", price: "₦15000" },
+    { name: "Men Baggy Jean", image: "baggy.jpeg", price: "₦12000" },
+    { name: "Half Shoe", image: "half shoe.jpg", price: "₦18000" },
+    { name: "Lady Jean Jacket", image: "jacket.jpeg", price: "₦20000" },
+    { name: "Stock Palm", image: "palm.jpg", price: "₦8000" },
+    { name: "Wristwatch", image: "watch.jpg", price: "₦25000" },
+    { name: "Schoolbag", image: "bag.jpg", price: "₦10000" },
+    { name: "Crossbag", image: "crossbag.jpg", price: "₦12000" },
+    { name: "Slide", image: "slide.jpg", price: "₦6000" },
+    { name: "Armless", image: "Armless.jpeg", price: "₦10000" }
+  ];
+
+  let cart = [];
+
+  function displayProducts(items) {
+    const productList = document.getElementById("product-list");
+    productList.innerHTML = "";
+    items.forEach((product, index) => {
+      const div = document.createElement("div");
+      div.className = "product";
+      div.innerHTML = `
+        <img src="${product.image}" alt="${product.name}" onclick="openModal('${product.image}')">
+        <h3>${product.name}</h3>
+        <p>${product.price}</p>
+        <button onclick="addToCart(${index})">Add to Cart</button>
+      `;
+      productList.appendChild(div);
+    });
+  }
+
+  function addToCart(index) {
+    cart.push(products[index]);
+    updateCart();
+  }
+
+  function removeFromCart(i) {
+    cart.splice(i, 1);
+    updateCart();
+  }
+
+  function updateCart() {
+    document.getElementById("cart-count").textContent = cart.length;
+    const cartItems = document.getElementById("cart-items");
+    cartItems.innerHTML = "";
+    let total = 0;
+
+    cart.forEach((item, index) => {
+      let priceNum = parseInt(item.price.replace(/[^\d]/g, ""));
+      total += priceNum;
+
+      cartItems.innerHTML += `
+        <div class="cart-item">
+          <span>${item.name} - ${item.price}</span>
+          <button onclick="removeFromCart(${index})">X</button>
+        </div>
+      `;
+    });
+
+    if (cart.length > 0) {
+      cartItems.innerHTML += `<hr><strong>Total: ₦${total}</strong>`;
+    }
+  }
+
+  function toggleCart() {
+    const box = document.getElementById("cart-box");
+    box.style.display = box.style.display === "block" ? "none" : "block";
+  }
+
+  function searchProduct() {
+    const input = document.getElementById("searchInput").value.toLowerCase();
+    const filtered = products.filter(p => p.name.toLowerCase().includes(input));
+    displayProducts(filtered);
+  }
+
+  function openModal(imgSrc) {
+    const modal = document.getElementById("imgmodal");
+    modal.innerHTML = `<img src="${imgSrc}" alt="Product">`;
+    modal.style.display = "block";
+  }
+
+  function closeModal() {
+    document.getElementById("imgmodal").style.display = "none";
+  }
+
+  displayProducts(products);
+</script>
+
+</body>
+</html>

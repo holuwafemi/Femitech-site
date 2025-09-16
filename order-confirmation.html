@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Confirmation - Holuwafemi Store</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    .confirmation-container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+    }
+    h2 {
+      text-align: center;
+      color: green;
+      margin-bottom: 20px;
+    }
+    .order-details p {
+      margin: 8px 0;
+      font-size: 16px;
+    }
+    .cart-items {
+      margin-top: 15px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #fafafa;
+    }
+    .cart-items ul {
+      list-style: none;
+      padding: 0;
+    }
+    .cart-items li {
+      margin: 5px 0;
+      padding: 6px;
+      border-bottom: 1px solid #ddd;
+    }
+    button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      background: gold;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: orange;
+    }
+  </style>
+</head>
+<body>
+  <div class="confirmation-container">
+    <h2>✅ Order Confirmed</h2>
+    <div class="order-details" id="orderDetails"></div>
+    <div class="cart-items">
+      <h3>🛒 Items Ordered</h3>
+      <ul id="cartItems"></ul>
+    </div>
+    <button onclick="goHome()">Back to Store</button>
+  </div>
+
+  <script>
+    function loadOrder() {
+      const order = JSON.parse(localStorage.getItem("order"));
+      if (!order) {
+        document.getElementById("orderDetails").innerHTML = "<p>No order found.</p>";
+        return;
+      }
+
+      document.getElementById("orderDetails").innerHTML = `
+        <p><strong>Name:</strong> ${order.fullname}</p>
+        <p><strong>Email:</strong> ${order.email}</p>
+        <p><strong>Phone:</strong> ${order.phone}</p>
+        <p><strong>Address:</strong> ${order.address}</p>
+        <p><strong>Payment Method:</strong> ${order.payment}</p>
+      `;
+
+      const cartList = document.getElementById("cartItems");
+      cartList.innerHTML = "";
+      order.cart.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = `${item.name} - ${item.price}`;
+        cartList.appendChild(li);
+      });
+    }
+
+    function goHome() {
+      localStorage.removeItem("cart"); // clear cart
+      window.location.href = "index.html";
+    }
+
+    loadOrder();
+  </script>
+</body>
+</html>
+
