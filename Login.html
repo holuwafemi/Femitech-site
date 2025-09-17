@@ -37,24 +37,47 @@
     <button type="submit">Login</button>
   </form>
 
-  <script>
-    function loginUser(e) {
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } 
+      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    // Firebase config (same as register.html)
+    const firebaseConfig = {
+      apiKey: "AIzaSyAYuih3G4qtae0TNo_BHgtc7TBud6FqcmY",
+      authDomain: "femitech-1-81af7.firebaseapp.com",
+      projectId: "femitech-1-81af7",
+      storageBucket: "femitech-1-81af7.firebasestorage.app",
+      messagingSenderId: "502507925530",
+      appId: "1:502507925530:web:513c90ae0922128d6221a3",
+      measurementId: "G-K8KQMEFBVX"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Login function
+    async function loginUser(e) {
       e.preventDefault();
-      const savedUser = JSON.parse(localStorage.getItem('user'));
-      const email = document.getElementById('email').value;
+
+      const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
-      if (savedUser && savedUser.email === email && savedUser.password === password) {
-        alert('Login successful!');
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        alert(`✅ Welcome back, ${user.displayName || "User"}!`);
         window.location.href = "index.html";
-      } else {
-        alert('Invalid email or password');
+      } catch (error) {
+        alert("❌ Error: " + error.message);
       }
     }
   </script>
+
+  <nav style="text-align:center; margin-top:20px;">
+    <a href="index.html">Home</a> |
+    <a href="register.html">Register</a>
+  </nav>
 </body>
 </html>
-<nav>
-  <a href="index.html">Home</a> |
-  <a href="register.html">Register</a>
-</nav>
