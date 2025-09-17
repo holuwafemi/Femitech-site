@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register - Habby Store</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #003366, #0055aa);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .register-container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 420px;
+    }
+    h2 {
+      text-align: center;
+      color: #003366;
+      margin-bottom: 20px;
+    }
+    .input-group {
+      margin-bottom: 15px;
+    }
+    .input-group label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+    .input-group input:focus {
+      border-color: #003366;
+      outline: none;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #003366;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #0055aa;
+    }
+    .link {
+      text-align: center;
+      margin-top: 15px;
+    }
+    .link a {
+      color: #003366;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <h2>Create Account</h2>
+    <form onsubmit="registerUser(event)">
+      <div class="input-group">
+        <label for="surname">Surname</label>
+        <input type="text" id="surname" placeholder="Enter surname" required>
+      </div>
+      <div class="input-group">
+        <label for="firstname">First Name</label>
+        <input type="text" id="firstname" placeholder="Enter first name" required>
+      </div>
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Choose a username" required>
+      </div>
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Enter email" required>
+      </div>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter password" required>
+      </div>
+      <div class="input-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" placeholder="Confirm password" required>
+      </div>
+      <button type="submit">Register</button>
+      <div class="link">
+        <p>Already have an account? <a href="login.html">Login</a></p>
+      </div>
+    </form>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Import Firebase functions
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, updateProfile } 
+      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    // Firebase config (your project details)
+    const firebaseConfig = {
+      apiKey: "AIzaSyAYuih3G4qtae0TNo_BHgtc7TBud6FqcmY",
+      authDomain: "femitech-1-81af7.firebaseapp.com",
+      projectId: "femitech-1-81af7",
+      storageBucket: "femitech-1-81af7.firebasestorage.app",
+      messagingSenderId: "502507925530",
+      appId: "1:502507925530:web:513c90ae0922128d6221a3",
+      measurementId: "G-K8KQMEFBVX"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Register Function
+    async function registerUser(e) {
+      e.preventDefault();
+
+      const surname = document.getElementById('surname').value.trim();
+      const firstname = document.getElementById('firstname').value.trim();
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (password !== confirmPassword) {
+        alert("❌ Passwords do not match!");
+        return;
+      }
+
+      try {
+        // Create user with Firebase
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+        // Update profile with display name
+        await updateProfile(userCredential.user, {
+          displayName: `${firstname} ${surname} (${username})`
+        });
+
+        alert("✅ Registration successful! You can now log in.");
+        window.location.href = "login.html";
+      } catch (error) {
+        alert("⚠️ Error: " + error.message);
+      }
+    }
+  </script>
+</body>
+</html>
