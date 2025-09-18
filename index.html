@@ -1,4 +1,4 @@
-0<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -29,14 +29,14 @@
       margin-left: 10px;
       color: black;
     }
-    nav a {
+    nav a, nav select {
       color: black;
       margin: 0 10px;
       text-decoration: none;
       font-weight: bold;
     }
-    nav span {
-      cursor: pointer;
+    nav select {
+      padding: 5px;
     }
     .search-bar {
       text-align: center;
@@ -145,9 +145,17 @@
   </div>
   <nav>
     <a href="#">Home</a>
-	 <a href="products.html">Shop</a>
+    <a href="products.html">Shop</a>
     <a href="login.html">Login</a>
     <a href="register.html">Register</a>
+    <select onchange="filterCategory(this.value)">
+      <option value="all">All Categories</option>
+      <option value="clothing">Clothing</option>
+      <option value="shoes">Shoes</option>
+      <option value="bags">Bags</option>
+      <option value="watches">Watches</option>
+      <option value="accessories">Phone Accessories</option>
+    </select>
     <span onclick="toggleCart()">🛒 Cart (<span id="cart-count">0</span>)</span>
   </nav>
 </header>
@@ -173,25 +181,29 @@
 
 <script>
   const products = [
-    { name: "Boxer Shorts", image: "boxer.jpg", price: "₦2000" },
-    { name: "Bluejeans for Men", image: "jeans.jpeg", price: "₦8000" },
-    { name: "Sneakers", image: "Sneakers.jpeg", price: "₦5000" },
-    { name: "3in1 Singlet", image: "Singlet.jpeg", price: "₦3000" },
-    { name: "Men Suit", image: "Men suit.jpeg", price: "₦30000" },
-    { name: "Men Polo", image: "polo.jpg", price: "₦10000" },
-    { name: "Roundneck", image: "roundneck.jpg", price: "₦7000" },
-    { name: "Up and Down", image: "poloo.jpg", price: "₦15000" },
-    { name: "Men Baggy Jean", image: "baggy.jpeg", price: "₦12000" },
-    { name: "Half Shoe", image: "half shoe.jpg", price: "₦18000" },
-    { name: "Lady Jean Jacket", image: "jacket.jpeg", price: "₦20000" },
-    { name: "Stock Palm", image: "palm.jpg", price: "₦8000" },
-    { name: " leather Wristwatch", image: "leather watch.jpeg", price: "₦25000" },
-    { name: "2in1 Wristwatch", image: "2in1 wristwatch.jpeg", price: "₦25000" },
-    { name: "4in1 Wristwatch", image: "wristwatch.jpeg", price: "₦25000" },
-    { name: "Schoolbag", image: "schoolbag.jpeg", price: "₦10000" },
-    { name: "Crossbag", image: "bags.jpg", price: "₦12000" },
-    { name: "Slide", image: "slide.jpg", price: "₦6000" },
-    { name: "Armless", image: "Armless.jpeg", price: "₦10000" }
+    { name: "Boxer Shorts", image: "boxer.jpg", price: "₦2000", category: "clothing" },
+    { name: "Bluejeans for Men", image: "jeans.jpeg", price: "₦8000", category: "clothing" },
+    { name: "Sneakers", image: "Sneakers.jpeg", price: "₦5000", category: "shoes" },
+    { name: "3in1 Singlet", image: "Singlet.jpeg", price: "₦3000", category: "clothing" },
+    { name: "Men Suit", image: "Men suit.jpeg", price: "₦30000", category: "clothing" },
+    { name: "Men Polo", image: "polo.jpg", price: "₦10000", category: "clothing" },
+    { name: "Roundneck", image: "roundneck.jpg", price: "₦7000", category: "clothing" },
+    { name: "Up and Down", image: "poloo.jpg", price: "₦15000", category: "clothing" },
+    { name: "Men Baggy Jean", image: "baggy.jpeg", price: "₦12000", category: "clothing" },
+    { name: "Half Shoe", image: "half shoe.jpg", price: "₦18000", category: "shoes" },
+    { name: "Lady Jean Jacket", image: "jacket.jpeg", price: "₦20000", category: "clothing" },
+    { name: "Stock Palm", image: "palm.jpg", price: "₦8000", category: "shoes" },
+    { name: "Leather Wristwatch", image: "leather watch.jpeg", price: "₦25000", category: "watches" },
+    { name: "2in1 Wristwatch", image: "2in1 wristwatch.jpeg", price: "₦25000", category: "watches" },
+    { name: "4in1 Wristwatch", image: "wristwatch.jpeg", price: "₦25000", category: "watches" },
+    { name: "Schoolbag", image: "schoolbag.jpeg", price: "₦10000", category: "bags" },
+    { name: "Crossbag", image: "bags.jpg", price: "₦12000", category: "bags" },
+    { name: "Slide", image: "slide.jpg", price: "₦6000", category: "shoes" },
+    { name: "Armless", image: "Armless.jpeg", price: "₦10000", category: "clothing" },
+    // New phone accessories
+    { name: "Phone Charger", image: "charger.jpg", price: "₦5000", category: "accessories" },
+    { name: "Earphones", image: "earphones.jpg", price: "₦7000", category: "accessories" },
+    { name: "Power Bank", image: "powerbank.jpg", price: "₦15000", category: "accessories" }
   ];
 
   let cart = [];
@@ -256,6 +268,15 @@
     displayProducts(filtered);
   }
 
+  function filterCategory(category) {
+    if (category === "all") {
+      displayProducts(products);
+    } else {
+      const filtered = products.filter(p => p.category === category);
+      displayProducts(filtered);
+    }
+  }
+
   function openModal(imgSrc) {
     const modal = document.getElementById("imgmodal");
     modal.innerHTML = `<img src="${imgSrc}" alt="Product">`;
@@ -271,14 +292,4 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
 
